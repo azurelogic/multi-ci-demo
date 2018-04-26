@@ -52,7 +52,7 @@ cache:
     if test -f package.json; then
       npm install --loglevel error;
     fi
-    sls deploy -v -s ${SLS_STAGE_NAME//-/} --region ${REGION:-"us-east-1"}
+    sls deploy -v -s ${SLS_STAGE_NAME//-/} --region ${REGION:-"us-east-1"} --ciname gitlab
 
 .production_variables: &production_variables
   ACCOUNT: ${PROD_ACCOUNT}
