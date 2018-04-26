@@ -114,8 +114,10 @@ workflows:
     jobs:
       - test_prod:
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: "/.*/"
+              only: /.*/
       - approval_prod:
           type: approval
           requires:
@@ -127,8 +129,10 @@ workflows:
     jobs:
       - test_staging:
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: "/.*/"
+              only: /.*/
       - deploy_staging:
           requires:
             - test_staging
