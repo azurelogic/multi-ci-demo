@@ -109,7 +109,11 @@ workflows:
   version: 2
   prod:
     jobs:
-      - test_prod
+      - test_prod:
+          filters:
+            tags:
+              only:
+                - /.*/
       - approval_prod:
           type: approval
           requires:
@@ -117,30 +121,26 @@ workflows:
       - deploy_prod:
           requires:
             - approval_prod
+  staging:
+    jobs:
+      - test_staging:
           filters:
             tags:
               only:
                 - /.*/
-  staging:
-    jobs:
-      - test_staging
       - deploy_staging:
           requires:
             - test_staging
-          filters:
-            tags:
-              only:
-                - /.*/
   dev:
     jobs:
-      - test_dev
-      - deploy_dev:
-          requires:
-            - test_dev
+      - test_dev:
           filters:
             branches:
               only:
                 - master
+      - deploy_dev:
+          requires:
+            - test_dev
   default:
     jobs:
       - test_dev:
