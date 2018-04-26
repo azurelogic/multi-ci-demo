@@ -1,0 +1,101 @@
+variables:
+  SLS_VERSION: "1.17.0" # make sure this matches your pinned version (if you have one)!
+  SLS_YAML_DIR: "." # This is relative to repo root. If serverless.yml is in the repo root, this should be "."
+  AWS_CLI_DEFAULT_REGION: us-east-1
+  PROD_SLS_STAGE_NAME: prod
+  PROD1_REGION: us-east-1
+#  PROD2_REGION: us-west-2 # use this for setting up multiregion deploys along with additional deploy:production_X jobs below
+  PROD_ACCOUNT: "491142528373"
+  STAGING_SLS_STAGE_NAME: staging
+  STAGING_REGION: us-east-1
+  STAGING_ACCOUNT: "491142528373"
+  DEV_SLS_STAGE_NAME: dev
+  DEV_REGION: us-east-1
+  DEV_ACCOUNT: "491142528373"
+
+image: trek10/ci:5.2
+
+cache:
+  key: ${CI_COMMIT_REF_NAME}
+  untracked: true
+  paths:
+    - ${SLS_YAML_DIR}/node_modules
+
+.run_tests: # disabled until tests are added
+  stage: test
+  script: |
+    if test -f package.json; then
+      npm install --loglevel error;
+      npm run test;
+    else
+      echo "no package.json found to run tests from";
+    fi
+
+.deployment_script: &deployment_script
+  stage: deploy
+  script: |
+    echo "===== Stage => ${SLS_STAGE_NAME//-/}, Account => ${ACCOUNT}, Region => ${REGION} ====="
+    echo "===== checking for tag and presence in master branch => ${CI_COMMIT_TAG:-"(not a tag)"} ====="
+    ([ -z ${CI_COMMIT_TAG} ] || (git branch -r --contains `git rev-list -n 1 ${CI_COMMIT_TAG}` | grep master))
+    echo "===== installing serverless ====="
+    npm install -g serverless@${SLS_VERSION:-"latest"} --loglevel error
+    echo "===== assuming permissions => ${DEPLOYMENT_ROLE} ====="
+    KST=(`aws sts assume-role --role-arn ${DEPLOYMENT_ROLE} --role-session-name "deployment-${CI_PROJECT_NAME}" --query '[Credentials.AccessKeyId,Credentials.SecretAccessKey,Credentials.SessionToken]' --output text`)
+    unset AWS_SECURITY_TOKEN
+    export AWS_DEFAULT_REGION=${AWS_CLI_DEFAULT_REGION}
+    export AWS_ACCESS_KEY_ID=${KST[0]}
+    export AWS_SECRET_ACCESS_KEY=${KST[1]}
+    export AWS_SESSION_TOKEN=${KST[2]}
+    export AWS_SECURITY_TOKEN=${KST[2]}
+    echo "===== deploying to ${CI_ENVIRONMENT_NAME} environment ====="
+    cd ${SLS_YAML_DIR}
+    if test -f package.json; then
+      npm install --loglevel error;
+    fi
+    sls deploy -v -s ${SLS_STAGE_NAME//-/} --region ${REGION:-"us-east-1"}
+
+.production_variables: &production_variables
+  ACCOUNT: ${PROD_ACCOUNT}
+  DEPLOYMENT_ROLE: "arn:aws:iam::${PROD_ACCOUNT}:role/ci-demo-deployer-admin-role"
+  SLS_STAGE_NAME: ${PROD_SLS_STAGE_NAME}
+  PRODUCTION: "true"
+
+deploy:production_1: &deploy_production
+  <<: *deployment_script
+  variables:
+    <<: *production_variables
+    REGION: ${PROD1_REGION}
+  artifacts:
+    paths:
+      - ${SLS_YAML_DIR}/.serverless
+    expire_in: 4 weeks
+  only:
+    - tags
+  when: manual
+
+# multiregion deploy is done by reusing the production1 template with different regions
+#deploy:production_2:
+#  <<: *deploy_production
+#  variables:
+#    <<: *production_variables
+#    REGION: ${PROD2_REGION}
+
+deploy:staging:
+  <<: *deployment_script
+  variables:
+    ACCOUNT: ${STAGING_ACCOUNT}
+    REGION: ${STAGING_REGION}
+    DEPLOYMENT_ROLE: "arn:aws:iam::${STAGING_ACCOUNT}:role/ci-demo-deployer-admin-role"
+    SLS_STAGE_NAME: ${STAGING_SLS_STAGE_NAME}
+  only:
+    - tags
+
+deploy:dev:
+  <<: *deployment_script
+  variables:
+    ACCOUNT: ${DEV_ACCOUNT}
+    REGION: ${DEV_REGION}
+    DEPLOYMENT_ROLE: "arn:aws:iam::${DEV_ACCOUNT}:role/ci-demo-deployer-admin-role"
+    SLS_STAGE_NAME: ${DEV_SLS_STAGE_NAME}
+  only:
+    - master

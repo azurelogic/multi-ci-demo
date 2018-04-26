@@ -1,0 +1,33 @@
+service: ci-demo-${self:custom.${opt:ciname, env:CINAME}.ciName}
+
+custom:
+  emptystring: ''
+  false: false
+  gitlab:
+    ciName: gitlab
+  circleci:
+    ciName: circleci
+  # dev:
+  # staging:
+  # prod:
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  variableSyntax: '\${((env|self|opt|file|cf|s3|ssm)[:\(][ :a-zA-Z0-9._,\-\/\(\)]*?)}'
+  stage: dev
+  region: us-east-1
+
+ environment:
+   CI_NAME: ${self:custom.${opt:ciname, env:CINAME}.ciName}
+
+functions:
+  hello:
+    handler: handler.hello
+
+resources:
+ Resources:
+   NewResource:
+     Type: AWS::S3::Bucket
+     Properties:
+       BucketName: my-new-bucket-${self:custom.${opt:ciname, env:CINAME}.ciName}-${opt:stage}

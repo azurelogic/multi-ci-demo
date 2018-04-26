@@ -1,0 +1,16 @@
+{
+  "name": "ci-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/azurelogic/ci-demo.git"
+  },
+  "author": "Rob Ribeiro <azurelogic@gmail.com> (https://azurelogic.com)",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/azurelogic/ci-demo#readme"
+}
