@@ -120,9 +120,19 @@ workflows:
               only: /.*/
       - approval_prod:
           type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
           requires:
             - test_prod
       - deploy_prod:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
           requires:
             - approval_prod
   staging:
@@ -134,6 +144,11 @@ workflows:
             tags:
               only: /.*/
       - deploy_staging:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
           requires:
             - test_staging
   dev:
