@@ -115,8 +115,7 @@ workflows:
       - test_prod:
           filters:
             tags:
-              only:
-                - /.*/
+              only: "/.*/"
       - approval_prod:
           type: approval
           requires:
@@ -129,8 +128,7 @@ workflows:
       - test_staging:
           filters:
             tags:
-              only:
-                - /.*/
+              only: "/.*/"
       - deploy_staging:
           requires:
             - test_staging
