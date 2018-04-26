@@ -19,7 +19,7 @@ provider:
   region: us-east-1
 
 environment:
-   CI_NAME: ${self:custom.${opt:ciname, env:CINAME}.ciName}
+  CI_NAME: ${self:custom.${opt:ciname, env:CINAME}.ciName}
 
 functions:
   hello:
