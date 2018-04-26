@@ -14,16 +14,19 @@ templates:
     SLS_STAGE_NAME: prod
     REGION: us-east-1
     ACCOUNT: "491142528373"
+    DEPLOYMENT_ROLE: "arn:aws:iam::${ACCOUNT}:role/ci-demo-deployer-admin-role"
 
   env:staging: &env_staging
     SLS_STAGE_NAME: staging
     REGION: us-east-1
     ACCOUNT: "491142528373"
+    DEPLOYMENT_ROLE: "arn:aws:iam::${ACCOUNT}:role/ci-demo-deployer-admin-role"
 
   env:dev: &env_dev
     SLS_STAGE_NAME: dev
     REGION: us-east-1
     ACCOUNT: "491142528373"
+    DEPLOYMENT_ROLE: "arn:aws:iam::${ACCOUNT}:role/ci-demo-deployer-admin-role"
 
   steps:test: &steps_test
     steps:
