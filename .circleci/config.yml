@@ -111,9 +111,6 @@ workflows:
     jobs:
       - test_prod:
           filters:
-            branches:
-              only:
-                - master
             tags:
               only:
                 - /.*/
@@ -128,9 +125,6 @@ workflows:
     jobs:
       - test_staging:
           filters:
-            branches:
-              only:
-                - master
             tags:
               only:
                 - /.*/
