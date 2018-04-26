@@ -14,19 +14,19 @@ templates:
     SLS_STAGE_NAME: prod
     REGION: us-east-1
     ACCOUNT: "491142528373"
-    DEPLOYMENT_ROLE: "arn:aws:iam::491142528373:role/ci-demo-deployer-admin-role"
+    DEPLOYMENT_ROLE: "arn:aws:iam::491142528373:role/trek10-ci-deployment"
 
   env:staging: &env_staging
     SLS_STAGE_NAME: staging
     REGION: us-east-1
     ACCOUNT: "491142528373"
-    DEPLOYMENT_ROLE: "arn:aws:iam::491142528373:role/ci-demo-deployer-admin-role"
+    DEPLOYMENT_ROLE: "arn:aws:iam::491142528373:role/trek10-ci-deployment"
 
   env:dev: &env_dev
     SLS_STAGE_NAME: dev
     REGION: us-east-1
     ACCOUNT: "491142528373"
-    DEPLOYMENT_ROLE: "arn:aws:iam::491142528373:role/ci-demo-deployer-admin-role"
+    DEPLOYMENT_ROLE: "arn:aws:iam::491142528373:role/trek10-ci-deployment"
 
   steps:test: &steps_test
     steps:
