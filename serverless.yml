@@ -18,7 +18,7 @@ provider:
   stage: dev
   region: us-east-1
 
- environment:
+environment:
    CI_NAME: ${self:custom.${opt:ciname, env:CINAME}.ciName}
 
 functions:
