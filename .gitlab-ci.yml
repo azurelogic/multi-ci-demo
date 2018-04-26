@@ -21,7 +21,7 @@ cache:
   paths:
     - ${SLS_YAML_DIR}/node_modules
 
-.run_tests: # disabled until tests are added
+run_tests:
   stage: test
   script: |
     if test -f package.json; then
