@@ -56,7 +56,7 @@ run_tests:
 
 .production_variables: &production_variables
   ACCOUNT: ${PROD_ACCOUNT}
-  DEPLOYMENT_ROLE: "arn:aws:iam::${PROD_ACCOUNT}:role/trek10-ci-deployment"
+  DEPLOYMENT_ROLE: "arn:aws:iam::${PROD_ACCOUNT}:role/ci-demo-deployer-admin-role"
   SLS_STAGE_NAME: ${PROD_SLS_STAGE_NAME}
   PRODUCTION: "true"
 
@@ -85,7 +85,7 @@ deploy:staging:
   variables:
     ACCOUNT: ${STAGING_ACCOUNT}
     REGION: ${STAGING_REGION}
-    DEPLOYMENT_ROLE: "arn:aws:iam::${STAGING_ACCOUNT}:role/trek10-ci-deployment"
+    DEPLOYMENT_ROLE: "arn:aws:iam::${STAGING_ACCOUNT}:role/ci-demo-deployer-admin-role"
     SLS_STAGE_NAME: ${STAGING_SLS_STAGE_NAME}
   only:
     - tags
@@ -95,7 +95,7 @@ deploy:dev:
   variables:
     ACCOUNT: ${DEV_ACCOUNT}
     REGION: ${DEV_REGION}
-    DEPLOYMENT_ROLE: "arn:aws:iam::${DEV_ACCOUNT}:role/trek10-ci-deployment"
+    DEPLOYMENT_ROLE: "arn:aws:iam::${DEV_ACCOUNT}:role/ci-demo-deployer-admin-role"
     SLS_STAGE_NAME: ${DEV_SLS_STAGE_NAME}
   only:
     - master
