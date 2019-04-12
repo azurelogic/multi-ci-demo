@@ -45,7 +45,6 @@ templates:
       - checkout
       - run: 
           command: |
-            . ./loadsecretvars.sh
             echo "===== Stage => ${SLS_STAGE_NAME//-/}, Region => ${REGION} ====="
             echo "===== checking for tag and presence in master branch => ${CIRCLE_TAG:-"(not a tag)"} ====="
             ([ -z ${CIRCLE_TAG} ] || (git branch -r --contains `git rev-list -n 1 ${CIRCLE_TAG}` | grep master))
