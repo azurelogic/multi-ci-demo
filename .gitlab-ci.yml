@@ -33,7 +33,6 @@ run_tests:
 .deployment_script: &deployment_script
   stage: deploy
   script: |
-    . ./loadsecretvars.sh
     echo "===== Stage => ${SLS_STAGE_NAME//-/}, Region => ${REGION} ====="
     echo "===== checking for tag and presence in master branch => ${CI_COMMIT_TAG:-"(not a tag)"} ====="
     ([ -z ${CI_COMMIT_TAG} ] || (git branch -r --contains `git rev-list -n 1 ${CI_COMMIT_TAG}` | grep master))
