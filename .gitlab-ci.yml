@@ -38,7 +38,9 @@ run_tests:
     ([ -z ${CI_COMMIT_TAG} ] || (git branch -r --contains `git rev-list -n 1 ${CI_COMMIT_TAG}` | grep master))
     echo "===== installing serverless ====="
     npm install -g serverless@${SLS_VERSION:-"latest"} --loglevel error
+    echo "===== assuming permissions   ====="
     unset AWS_SECURITY_TOKEN
+    unset AWS_SESSION_TOKEN
     echo "===== deploying to ${CI_ENVIRONMENT_NAME} environment ====="
     cd ${SLS_YAML_DIR}
     if test -f package.json; then
