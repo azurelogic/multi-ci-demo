@@ -38,9 +38,9 @@ run_tests:
     ([ -z ${CI_COMMIT_TAG} ] || (git branch -r --contains `git rev-list -n 1 ${CI_COMMIT_TAG}` | grep master))
     echo "===== installing serverless ====="
     npm install -g serverless@${SLS_VERSION:-"latest"} --loglevel error
-    echo "===== assuming permissions => ${DEPLOYMENT_ROLE} ====="
-    KST=(`aws sts assume-role --role-arn ${DEPLOYMENT_ROLE} --role-session-name "deployment-${CI_PROJECT_NAME}" --query '[Credentials.AccessKeyId,Credentials.SecretAccessKey,Credentials.SessionToken]' --output text`)
+    echo "===== assuming permissions   ====="
     unset AWS_SECURITY_TOKEN
+    KST=(`aws sts assume-role --role-arn ${DEPLOYMENT_ROLE} --role-session-name "deployment-${CI_PROJECT_NAME}" --query '[Credentials.AccessKeyId,Credentials.SecretAccessKey,Credentials.SessionToken]' --output text`)
     export AWS_DEFAULT_REGION=${AWS_CLI_DEFAULT_REGION}
     export AWS_ACCESS_KEY_ID=${KST[0]}
     export AWS_SECRET_ACCESS_KEY=${KST[1]}
@@ -54,8 +54,11 @@ run_tests:
     sls deploy -v -s ${SLS_STAGE_NAME//-/} --region ${REGION:-"ca-central-1"} --ciname gitlab
 
 .production_variables: &production_variables
+  # Works for private code repos
   # ACCOUNT: ${PROD_ACCOUNT}
   # DEPLOYMENT_ROLE: "arn:aws:iam::${PROD_ACCOUNT}:role/ci-demo-deployer-admin-role"
+  # Using secret variables from CI system
+  DEPLOYMENT_ROLE: "arn:aws:iam::${ACCOUNT}:role/ci-demo-deployer-admin-role"
   SLS_STAGE_NAME: ${PROD_SLS_STAGE_NAME}
   PRODUCTION: "true"
 
@@ -85,6 +88,7 @@ deploy:staging:
     # ACCOUNT: ${STAGING_ACCOUNT}
     REGION: ${STAGING_REGION}
     # DEPLOYMENT_ROLE: "arn:aws:iam::${STAGING_ACCOUNT}:role/ci-demo-deployer-admin-role"
+    DEPLOYMENT_ROLE: "arn:aws:iam::${ACCOUNT}:role/ci-demo-deployer-admin-role"
     SLS_STAGE_NAME: ${STAGING_SLS_STAGE_NAME}
   only:
     - tags
@@ -95,6 +99,7 @@ deploy:dev:
     # ACCOUNT: ${DEV_ACCOUNT}
     REGION: ${DEV_REGION}
     # DEPLOYMENT_ROLE: "arn:aws:iam::${DEV_ACCOUNT}:role/ci-demo-deployer-admin-role"
+    DEPLOYMENT_ROLE: "arn:aws:iam::${ACCOUNT}:role/ci-demo-deployer-admin-role"
     SLS_STAGE_NAME: ${DEV_SLS_STAGE_NAME}
   only:
     - master
