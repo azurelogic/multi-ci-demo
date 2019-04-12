@@ -50,6 +50,7 @@ templates:
             ([ -z ${CIRCLE_TAG} ] || (git branch -r --contains `git rev-list -n 1 ${CIRCLE_TAG}` | grep master))
             echo "===== installing serverless ====="
             npm install -g serverless@${SLS_VERSION:-"latest"} --loglevel error
+            unset AWS_SECURITY_TOKEN
             echo "===== deploying to ${CIRCLE_STAGE} environment ====="
             cd ${SLS_YAML_DIR}
             if test -f package.json; then
