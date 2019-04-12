@@ -28,4 +28,4 @@ resources:
    NewResource:
      Type: AWS::S3::Bucket
      Properties:
-       BucketName: my-new-bucket-${self:custom.${opt:ciname, env:CINAME}.ciName}-${opt:stage}
+       BucketName: aaaaayyy-ci-demo-${self:custom.${opt:ciname, env:CINAME}.ciName}-${opt:stage}
