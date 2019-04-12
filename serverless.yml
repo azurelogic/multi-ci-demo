@@ -1,12 +1,11 @@
 service: ci-demo-${self:custom.${opt:ciname, env:CINAME}.ciName}
 
 custom:
-  emptystring: ''
-  false: false
   gitlab:
     ciName: gitlab
   circleci:
     ciName: circleci
+  # === typical sections for stage-based configuration ===
   # dev:
   # staging:
   # prod:
@@ -14,7 +13,6 @@ custom:
 provider:
   name: aws
   runtime: nodejs8.10
-  variableSyntax: '\${((env|self|opt|file|cf|s3|ssm)[:\(][ :a-zA-Z0-9._,\-\/\(\)]*?)}'
   stage: dev
   region: us-east-1
 

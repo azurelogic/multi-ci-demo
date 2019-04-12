@@ -3,30 +3,30 @@ version: 2
 templates:
   jobs: &job_settings
     docker:
-      - image: trek10/ci:5.2
+      - image: trek10/ci:8.4
 
   env:global: &env_global
-    SLS_VERSION: "1.17.0" # make sure this matches your pinned version (if you have one)!
+    SLS_VERSION: "1.40.0" # make sure this matches your pinned version (if you have one)!
     SLS_YAML_DIR: "." # This is relative to repo root. If serverless.yml is in the repo root, this should be "."
-    AWS_CLI_DEFAULT_REGION: us-east-1
+    AWS_CLI_DEFAULT_REGION: ca-central-1
 
   env:prod: &env_prod
     SLS_STAGE_NAME: prod
-    REGION: us-east-1
-    ACCOUNT: "491142528373"
-    DEPLOYMENT_ROLE: "arn:aws:iam::491142528373:role/ci-demo-deployer-admin-role"
+    REGION: ca-central-1
+    # ACCOUNT: "xxx"
+    # DEPLOYMENT_ROLE: "arn:aws:iam::xxx:role/ci-demo-deployer-admin-role"
 
   env:staging: &env_staging
     SLS_STAGE_NAME: staging
-    REGION: us-east-1
-    ACCOUNT: "491142528373"
-    DEPLOYMENT_ROLE: "arn:aws:iam::491142528373:role/ci-demo-deployer-admin-role"
+    REGION: ca-central-1
+    # ACCOUNT: "xxx"
+    # DEPLOYMENT_ROLE: "arn:aws:iam::xxx:role/ci-demo-deployer-admin-role"
 
   env:dev: &env_dev
     SLS_STAGE_NAME: dev
-    REGION: us-east-1
-    ACCOUNT: "491142528373"
-    DEPLOYMENT_ROLE: "arn:aws:iam::491142528373:role/ci-demo-deployer-admin-role"
+    REGION: ca-central-1
+    # ACCOUNT: "xxx"
+    # DEPLOYMENT_ROLE: "arn:aws:iam::xxx:role/ci-demo-deployer-admin-role"
 
   steps:test: &steps_test
     steps:
@@ -45,7 +45,8 @@ templates:
       - checkout
       - run: 
           command: |
-            echo "===== Stage => ${SLS_STAGE_NAME//-/}, Account => ${ACCOUNT}, Region => ${REGION} ====="
+            . ./loadsecretvars.sh
+            echo "===== Stage => ${SLS_STAGE_NAME//-/}, Region => ${REGION} ====="
             echo "===== checking for tag and presence in master branch => ${CIRCLE_TAG:-"(not a tag)"} ====="
             ([ -z ${CIRCLE_TAG} ] || (git branch -r --contains `git rev-list -n 1 ${CIRCLE_TAG}` | grep master))
             echo "===== installing serverless ====="
