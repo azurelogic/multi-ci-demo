@@ -41,6 +41,7 @@ run_tests:
     echo "===== assuming permissions   ====="
     unset AWS_SECURITY_TOKEN
     unset AWS_SESSION_TOKEN
+    env | grep AWS
     echo "===== deploying to ${CI_ENVIRONMENT_NAME} environment ====="
     cd ${SLS_YAML_DIR}
     if test -f package.json; then
@@ -52,8 +53,6 @@ run_tests:
   # Works for private code repos
   # ACCOUNT: ${PROD_ACCOUNT}
   # DEPLOYMENT_ROLE: "arn:aws:iam::${PROD_ACCOUNT}:role/ci-demo-deployer-admin-role"
-  # Using secret variables from CI system
-  DEPLOYMENT_ROLE: "arn:aws:iam::${ACCOUNT}:role/ci-demo-deployer-admin-role"
   SLS_STAGE_NAME: ${PROD_SLS_STAGE_NAME}
   PRODUCTION: "true"
 
@@ -81,9 +80,8 @@ deploy:staging:
   <<: *deployment_script
   variables:
     # ACCOUNT: ${STAGING_ACCOUNT}
-    REGION: ${STAGING_REGION}
     # DEPLOYMENT_ROLE: "arn:aws:iam::${STAGING_ACCOUNT}:role/ci-demo-deployer-admin-role"
-    DEPLOYMENT_ROLE: "arn:aws:iam::${ACCOUNT}:role/ci-demo-deployer-admin-role"
+    REGION: ${STAGING_REGION}
     SLS_STAGE_NAME: ${STAGING_SLS_STAGE_NAME}
   only:
     - tags
@@ -92,9 +90,8 @@ deploy:dev:
   <<: *deployment_script
   variables:
     # ACCOUNT: ${DEV_ACCOUNT}
-    REGION: ${DEV_REGION}
     # DEPLOYMENT_ROLE: "arn:aws:iam::${DEV_ACCOUNT}:role/ci-demo-deployer-admin-role"
-    DEPLOYMENT_ROLE: "arn:aws:iam::${ACCOUNT}:role/ci-demo-deployer-admin-role"
+    REGION: ${DEV_REGION}
     SLS_STAGE_NAME: ${DEV_SLS_STAGE_NAME}
   only:
     - master
