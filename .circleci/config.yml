@@ -13,20 +13,14 @@ templates:
   env:prod: &env_prod
     SLS_STAGE_NAME: prod
     REGION: ca-central-1
-    # ACCOUNT: "xxx"
-    # DEPLOYMENT_ROLE: "arn:aws:iam::xxx:role/ci-demo-deployer-admin-role"
 
   env:staging: &env_staging
     SLS_STAGE_NAME: staging
     REGION: ca-central-1
-    # ACCOUNT: "xxx"
-    # DEPLOYMENT_ROLE: "arn:aws:iam::xxx:role/ci-demo-deployer-admin-role"
 
   env:dev: &env_dev
     SLS_STAGE_NAME: dev
     REGION: ca-central-1
-    # ACCOUNT: "xxx"
-    # DEPLOYMENT_ROLE: "arn:aws:iam::xxx:role/ci-demo-deployer-admin-role"
 
   steps:test: &steps_test
     steps:
@@ -52,7 +46,6 @@ templates:
             npm install -g serverless@${SLS_VERSION:-"latest"} --loglevel error
             unset AWS_SECURITY_TOKEN
             unset AWS_SESSION_TOKEN
-            env | grep AWS
             echo "===== deploying to ${CIRCLE_STAGE} environment ====="
             cd ${SLS_YAML_DIR}
             if test -f package.json; then

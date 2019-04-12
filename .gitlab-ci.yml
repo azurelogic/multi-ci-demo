@@ -41,7 +41,6 @@ run_tests:
     echo "===== assuming permissions   ====="
     unset AWS_SECURITY_TOKEN
     unset AWS_SESSION_TOKEN
-    env | grep AWS
     echo "===== deploying to ${CI_ENVIRONMENT_NAME} environment ====="
     cd ${SLS_YAML_DIR}
     if test -f package.json; then
