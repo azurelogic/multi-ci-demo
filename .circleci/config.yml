@@ -46,6 +46,8 @@ templates:
             npm install -g serverless@${SLS_VERSION:-"latest"} --loglevel error
             unset AWS_SECURITY_TOKEN
             unset AWS_SESSION_TOKEN
+            AWS_ACCESS_KEY_ID=${ACCESS_KEY_ID}
+            AWS_SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
             echo "===== deploying to ${CIRCLE_STAGE} environment ====="
             cd ${SLS_YAML_DIR}
             if test -f package.json; then
