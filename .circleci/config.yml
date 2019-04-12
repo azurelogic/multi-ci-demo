@@ -50,14 +50,6 @@ templates:
             ([ -z ${CIRCLE_TAG} ] || (git branch -r --contains `git rev-list -n 1 ${CIRCLE_TAG}` | grep master))
             echo "===== installing serverless ====="
             npm install -g serverless@${SLS_VERSION:-"latest"} --loglevel error
-            echo "===== assuming permissions => ====="
-            unset AWS_SECURITY_TOKEN
-            KST=(`aws sts assume-role --role-arn ${DEPLOYMENT_ROLE} --role-session-name "deployment-${CIRCLE_PROJECT_REPONAME}" --query '[Credentials.AccessKeyId,Credentials.SecretAccessKey,Credentials.SessionToken]' --output text`)
-            export AWS_DEFAULT_REGION=${AWS_CLI_DEFAULT_REGION}
-            export AWS_ACCESS_KEY_ID=${KST[0]}
-            export AWS_SECRET_ACCESS_KEY=${KST[1]}
-            export AWS_SESSION_TOKEN=${KST[2]}
-            export AWS_SECURITY_TOKEN=${KST[2]}
             echo "===== deploying to ${CIRCLE_STAGE} environment ====="
             cd ${SLS_YAML_DIR}
             if test -f package.json; then
